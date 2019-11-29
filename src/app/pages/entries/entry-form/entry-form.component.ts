@@ -8,6 +8,8 @@ import toastr from "toastr";
 
 import { Entry } from "../shared/entry.model";
 import { EntryService } from '../shared/entry.service';
+import { Category } from '../../categories/shared/category.model';
+import { CategoryService } from '../../categories/shared/category.service';
 
 @Component({
   selector: 'app-entry-form',
@@ -20,23 +22,47 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
   pageTitle: string;
   serverErrorMessages: string[] = null;
 
+  categories: Array<Category>;
+
   entryForm: FormGroup;
 
   submittingForm: boolean = false;
 
   entry: Entry = new Entry();
 
+  imaskConfig = {
+    mask: Number,
+    scale: 2,
+    thousandsSeparator: '',
+    padFractionalZeros: true,
+    nomalizeZeros: true,
+    redix: ','
+  }
+
+  ptBR = {
+    firstDayOfWeek: 0,
+    dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sabado'],
+    dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+    dayNamesMin: ['Do', 'Se', 'Te', 'Qu', 'Qu', 'Se', 'Sa'],
+    monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+    monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+    today: 'Hoje',
+    clear: 'Limpar'
+  }
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private entryService: EntryService
+    private entryService: EntryService,
+    private categoryService: CategoryService
   ) { }
 
   ngOnInit() {
     this.setCurrentAction();
     this.buildEntryForm();
-    this.loadEntry()
+    this.loadEntry();
+    this.loadCategories();
   }
 
   ngAfterContentChecked() {
@@ -48,6 +74,17 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
     if (this.currentAction === 'new')
       this.createEntry();
     else this.updateEntry(); // currentAction === 'edit'
+  }
+
+  get typeOptions(): Array<any> {
+    return Object.entries(Entry.types).map(
+      ([value, text]) => {
+        return {
+          text: text,
+          value: value
+        }
+      }
+    );
   }
 
   // PRIVATE METHODS
@@ -62,10 +99,10 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
       id: [null],
       name: [null, [Validators.required, Validators.minLength(2)]],
       description: [null],
-      type: [null, [Validators.required]],
+      type: ['expense', [Validators.required]],
       amount: [null, [Validators.required]],
       date: [null, [Validators.required]],
-      paid: [null, [Validators.required]],
+      paid: [true, [Validators.required]],
       categoryId: [null, [Validators.required]],
     });
   }
@@ -78,11 +115,18 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
         .subscribe(
           entry => {
             this.entry = entry;
+            console.log(entry);
             this.entryForm.patchValue(entry); // binds loaded entry data to entryForm
           },
           error => alert('Ocorreu um erro no servidor, tente mais tarde')
         );
     }
+  }
+
+  private loadCategories() {
+    this.categoryService.getAll().subscribe(
+      categories => this.categories = categories
+    );
   }
 
   private setPageTitle() {
