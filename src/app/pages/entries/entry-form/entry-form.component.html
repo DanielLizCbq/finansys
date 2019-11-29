@@ -32,7 +32,7 @@
                   <option *ngFor="let option of typeOptions" [value]="option.value">{{ option.text }}</option>
                 </select>
                 <div class="text-danger" *ngIf="entryForm.get('type').invalid && entryForm.get('type').touched">
-                  <div *ngIf="entryForm.get('type').errors.required">Dado obrigatório</div>
+                  <div *ngIf="entryForm.get('type')['errors'].required">Dado obrigatório</div>
                 </div>
               </div>
 
@@ -41,8 +41,8 @@
                 <label for="name">Lançamento</label>
                 <input type="text" class="form-control" id="name" formControlName="name">
                 <div class="text-danger" *ngIf="entryForm.get('name').invalid && entryForm.get('name').touched">
-                  <div *ngIf="entryForm.get('name').errors.required">Dado obrigatório</div>
-                  <div *ngIf="entryForm.get('name').errors.minlength">Deve conter no mínimo 2 caracteres</div>
+                  <div *ngIf="entryForm.get('name')['errors'].required">Dado obrigatório</div>
+                  <div *ngIf="entryForm.get('name')['errors'].minlength">Deve conter no mínimo 2 caracteres</div>
                 </div>
               </div>
 
@@ -57,7 +57,7 @@
                     formControlName="amount">
                 </div>
                 <div class="text-danger" *ngIf="entryForm.get('amount').invalid && entryForm.get('amount').touched">
-                  <div *ngIf="entryForm.get('amount').errors.required">Dado obrigatório</div>
+                  <div *ngIf="entryForm.get('amount')['errors'].required">Dado obrigatório</div>
                 </div>
               </div>
 
@@ -68,7 +68,7 @@
                   dateFormat="dd/mm/yy" [locale]="ptBR" [showButtonBar]="true">
                 </p-calendar>
                 <div class="text-danger" *ngIf="entryForm.get('date').invalid && entryForm.get('date').touched">
-                  <div *ngIf="entryForm.get('date').errors.required">Dado obrigatório</div>
+                  <div *ngIf="entryForm.get('date')['errors'].required">Dado obrigatório</div>
                 </div>
               </div>
             </div>
@@ -84,7 +84,7 @@
                     [class.active]="entryForm.get('paid').value === false" class="btn btn-outline-info">Pendente</label>
                 </div>
                 <div class="text-danger" *ngIf="entryForm.get('paid').invalid && entryForm.get('paid').touched">
-                  <div *ngIf="entryForm.get('paid').errors.required">Dado obrigatório</div>
+                  <div *ngIf="entryForm.get('paid')['errors'].required">Dado obrigatório</div>
                 </div>
               </div>
 
@@ -95,7 +95,7 @@
                   <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
                 </select>
                 <div class="text-danger" *ngIf="entryForm.get('categoryId').invalid && entryForm.get('categoryId').touched">
-                  <div *ngIf="entryForm.get('categoryId').errors.required">Dado obrigatório</div>
+                  <div *ngIf="entryForm.get('categoryId')['errors'].required">Dado obrigatório</div>
                 </div>
               </div>
 
