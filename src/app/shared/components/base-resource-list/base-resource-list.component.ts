@@ -7,11 +7,11 @@ export abstract class BaseResourceListComponent<T extends BaseResourceModel> imp
 
   resources: BaseResourceModel[] = [];
 
-  constructor(private baseResourceService: BaseResourceService<T>) { }
+  constructor(protected baseResourceService: BaseResourceService<T>) { }
 
   ngOnInit() {
     this.baseResourceService.getAll().subscribe(
-      resources => this.resources = resources,
+      resources => this.resources = resources.sort((a, b) => b.id - a.id),
       error => alert('Erro ao carregar a lista')
     )
   }
