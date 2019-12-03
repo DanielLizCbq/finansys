@@ -20,7 +20,7 @@ export class ReportsComponent implements OnInit {
   balance: any = 0;
 
   expenseChartData: any;
-  revenuaChartData: any;
+  revenueChartData: any;
 
   chartOptions = {
     scales: {
@@ -82,11 +82,18 @@ export class ReportsComponent implements OnInit {
   }
 
   private setChartData() {
+
+    this.revenueChartData = this.getChartData('revenue', 'Gráfico de Receitas', '#9ccc65');
+    this.expenseChartData = this.getChartData('expense', 'Gráfico de Despesas', '#e03131');
+
+  }
+
+  private getChartData(entryType: string, title: string, color: string) {
     const chartData = [];
     this.categories.forEach(category => {
       // filtering entries by category and type
       const filteredEntries = this.entries.filter(
-        entry => (entry.categoryId === category.id) && entry.type === 'revenue'
+        entry => (entry.categoryId === category.id) && entry.type === entryType
       );
 
       // If found entries, then sum entries amount and add to chartData
@@ -101,11 +108,11 @@ export class ReportsComponent implements OnInit {
       }
     });
 
-    this.revenuaChartData = {
+    return {
       labels: chartData.map(element => element.categoryName),
       datasets: [{
-        label: 'Gráfico de Receitas',
-        backgroundColor: '#9ccc65',
+        label: title,
+        backgroundColor: color,
         data: chartData.map(element => element.totalAmount)
       }]
     };

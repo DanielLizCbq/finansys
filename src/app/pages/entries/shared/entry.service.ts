@@ -34,6 +34,7 @@ export class EntryService extends BaseResourceService<Entry> {
   }
 
   getByMonthAndYear(month: number, year: number): Observable<Entry[]> {
+    console.log(month, year)
     return this.getAll().pipe(
       map(entries => this.filterByMonthAndYear(entries, month, year))
     );
